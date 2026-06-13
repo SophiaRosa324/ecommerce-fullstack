@@ -4,7 +4,9 @@ import connectDB from './config/db.js'
 import userRoutes from './routes/userRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
+import cors from 'cors'
 
+app.use(cors())
 dotenv.config()
 connectDB()
 
@@ -18,7 +20,7 @@ app.use('/api/products', productRoutes)
 app.use('/api/orders', orderRoutes)
 
 app.get('/', (req, res) => {
-  res.send('API está rodando 🚀')
+  res.send('API está rodando')
 })
 
 const PORT = process.env.PORT || 4000

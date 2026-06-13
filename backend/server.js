@@ -6,13 +6,14 @@ import productRoutes from './routes/productRoutes.js'
 import orderRoutes from './routes/orderRoutes.js'
 import cors from 'cors'
 
-app.use(cors())
+
 dotenv.config()
 connectDB()
 
 const app = express()
 
-app.use(express.json()) // middleware para parsear JSON
+app.use(cors())
+app.use(express.json()) 
 
 // Rotas
 app.use('/api/users', userRoutes)

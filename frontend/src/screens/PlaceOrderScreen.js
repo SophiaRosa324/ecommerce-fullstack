@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { createOrder } from '../actions/orderActions'
 import { Container, Row, Col, ListGroup, Button, Alert } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
 
 const PlaceOrderScreen = () => {
   const dispatch = useDispatch()

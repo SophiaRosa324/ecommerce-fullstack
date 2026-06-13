@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../actions/userActions'
 import { Link, useNavigate } from 'react-router-dom'  // ← adicione Link
-import { Container,Card, Row, Col, Form, Button, Alert } from 'react-bootstrap'
+import { Container, Card, Row, Col, Form, Button } from 'react-bootstrap'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
@@ -10,7 +10,7 @@ const LoginScreen = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const userLogin = useSelector(state => state.userLogin)
-  const { userInfo, error } = userLogin
+  const { userInfo } = userLogin
 
   useEffect(() => {
     if (userInfo) navigate('/')

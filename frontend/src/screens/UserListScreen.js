@@ -1,13 +1,12 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { Table, Button, Container, Alert } from 'react-bootstrap'
+import { Table, Button, Container } from 'react-bootstrap'
 import { listUsers, deleteUser } from '../actions/userActions'
 
 const UserListScreen = () => {
   const dispatch = useDispatch()
   const userList = useSelector(state => state.userList)
-  const { loading, error, users } = userList
+  const { users } = userList
   const userDelete = useSelector(state => state.userDelete)
   const { success: successDelete } = userDelete
 
@@ -40,7 +39,13 @@ const UserListScreen = () => {
         <td>{user.isAdmin ? 'Sim' : 'Não'}</td>
         <td>
           <Button variant="light" size="sm">Editar</Button>{' '}
-          <Button variant="danger" size="sm">Excluir</Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => deleteHandler(user._id)}
+          >
+            Excluir
+          </Button>
         </td>
       </tr>
     ))}

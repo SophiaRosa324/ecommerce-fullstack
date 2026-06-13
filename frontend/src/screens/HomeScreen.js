@@ -8,7 +8,7 @@ const HomeScreen = () => {
   const { keyword } = useParams()
   const dispatch = useDispatch()
   const productList = useSelector(state => state.productList)
-  const { loading, error, products } = productList
+  const { products } = productList
 
   useEffect(() => {
     dispatch(listProducts(keyword || ''))

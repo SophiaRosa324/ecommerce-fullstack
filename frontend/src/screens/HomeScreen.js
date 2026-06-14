@@ -13,12 +13,14 @@ const HomeScreen = () => {
   useEffect(() => {
     dispatch(listProducts(keyword || ''))
   }, [dispatch, keyword])
-
+  
+console.log(products)
   return (
 <Container className="py-4">
   <h1 className="mb-4">Produtos</h1>
   <Row>
-    {products.map(product => (
+    {Array.isArray(products) &&
+     products.map(product => (
       <Col key={product._id} sm={12} md={6} lg={4} xl={3} className="mb-4">
         <Card className="h-100 shadow-sm">
           <Card.Img variant="top" src={product.image} className="product-card-img" />

@@ -1,4 +1,3 @@
-// 🔹 LISTAR PRODUTOS
 export const productListReducer = (state = { products: [] }, action) => {
   switch (action.type) {
     case 'PRODUCT_LIST_REQUEST':
@@ -16,7 +15,6 @@ export const productListReducer = (state = { products: [] }, action) => {
 }
 
 
-// 🔹 DETALHES DO PRODUTO
 export const productDetailsReducer = (state = { product: {} }, action) => {
   switch (action.type) {
     case 'PRODUCT_DETAILS_REQUEST':
@@ -34,7 +32,6 @@ export const productDetailsReducer = (state = { product: {} }, action) => {
 }
 
 
-// 🔹 (EXTRA) CRIAR PRODUTO
 export const productCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case 'PRODUCT_CREATE_REQUEST':
@@ -54,7 +51,7 @@ export const productCreateReducer = (state = {}, action) => {
   }
 }
 
-// 🔹 (EXTRA) DELETAR PRODUTO
+
 export const productDeleteReducer = (state = {}, action) => {
   switch (action.type) {
     case 'PRODUCT_DELETE_REQUEST':

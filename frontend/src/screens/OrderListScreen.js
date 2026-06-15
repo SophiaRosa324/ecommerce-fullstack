@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Table, Button, Container, Alert } from 'react-bootstrap'
+import { Table, Button, Alert, Row, Col } from 'react-bootstrap'
+import AdminLayout from '../components/AdminLayout'
 import { listOrders } from '../actions/orderActions'
 
 const OrderListScreen = () => {
@@ -14,8 +15,12 @@ const OrderListScreen = () => {
   }, [dispatch])
 
   return (
-    <Container className="py-4">
-      <h1>Pedidos</h1>
+    <AdminLayout title="Pedidos">
+      <Row className="align-items-center mb-3">
+        <Col>
+          <h2 className="admin-section-title">Pedidos</h2>
+        </Col>
+      </Row>
       {loading ? (
         <p>Carregando...</p>
       ) : error ? (
@@ -23,7 +28,7 @@ const OrderListScreen = () => {
       ) : orders.length === 0 ? (
         <Alert variant="info">Nenhum pedido encontrado.</Alert>
       ) : (
-        <Table striped bordered hover responsive>
+        <Table striped bordered hover responsive className="admin-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -54,7 +59,7 @@ const OrderListScreen = () => {
           </tbody>
         </Table>
       )}
-    </Container>
+    </AdminLayout>
   )
 }
 

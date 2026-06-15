@@ -13,7 +13,9 @@ import UserListScreen from './screens/UserListScreen'
 import ProductListScreen from './screens/ProductListScreen'
 import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen'
+import UserEditScreen from './screens/UserEditScreen'
 import Header from './components/Header'
+import Footer from './components/Footer'
 import PrivateRoute from './components/PrivateRoute'
 import AdminRoute from './components/AdminRoute'
 
@@ -36,11 +38,13 @@ function App() {
           <Route path="/profile" element={<PrivateRoute><ProfileScreen /></PrivateRoute>} />
           {/* Admin */}
           <Route path="/admin/users" element={<AdminRoute><UserListScreen /></AdminRoute>} />
+          <Route path="/admin/user/:id/edit" element={<AdminRoute><UserEditScreen /></AdminRoute>} />
           <Route path="/admin/products" element={<AdminRoute><ProductListScreen /></AdminRoute>} />
           <Route path="/admin/product/:id/edit" element={<AdminRoute><ProductEditScreen /></AdminRoute>} />
           <Route path="/admin/orders" element={<AdminRoute><OrderListScreen /></AdminRoute>} />
         </Routes>
       </main>
+      <Footer />
     </Router>
   )
 }

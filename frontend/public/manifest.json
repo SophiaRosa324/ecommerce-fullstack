@@ -8,6 +8,11 @@
       "type": "image/x-icon"
     },
     {
+      "src": "icon8-loja-48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+        {
       "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192"

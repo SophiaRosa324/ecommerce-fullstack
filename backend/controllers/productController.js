@@ -1,12 +1,28 @@
 import Product from '../models/productModel.js'
 
-// GET todos produtos (com busca opcional por nome)
+// GET todos produtos (com busca opcional por nome ou categoria)
 export const getProducts = async (req, res) => {
   try {
+    // Construir filtro de keyword (busca por nome ou categoria)
     const keyword = req.query.keyword
-      ? { name: { $regex: req.query.keyword, $options: 'i' } }
+      ? {
+          $or: [
+            { name: { $regex: req.query.keyword, $options: 'i' } },
+            { category: { $regex: req.query.keyword, $options: 'i' } }
+          ]
+        }
       : {}
-    const products = await Product.find({ ...keyword })
+
+    // Construir filtro de category (busca específica por categoria)
+    const category = req.query.category
+      ? {
+          category: { $regex: req.query.category, $options: 'i' }
+        }
+      : {}
+
+    // Combinar ambos os filtros
+    const filter = { ...keyword, ...category }
+    const products = await Product.find(filter)
     res.json(products)
   } catch (error) {
     res.status(500).json({ message: error.message })

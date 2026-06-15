@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navbar, Nav, Container, NavDropdown, Form, Button } from 'react-bootstrap'
 import { useState } from 'react'
+import { logout } from '../actions/userActions'
 
 const Header = () => {
   const [keyword, setKeyword] = useState('')
@@ -10,8 +11,7 @@ const Header = () => {
   const { userInfo } = useSelector(state => state.userLogin)
 
   const logoutHandler = () => {
-    localStorage.removeItem('userInfo')
-    dispatch({ type: 'USER_LOGOUT' })
+    dispatch(logout())
     navigate('/login')
   }
 

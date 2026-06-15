@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { Table, Button, Container, Alert, Row, Col } from 'react-bootstrap'
+import { Table, Button, Alert, Row, Col } from 'react-bootstrap'
+import AdminLayout from '../components/AdminLayout'
 import { listProducts, deleteProduct, createProduct } from '../actions/productActions'
 
 const ProductListScreen = () => {
@@ -38,10 +39,10 @@ const ProductListScreen = () => {
   }
 
   return (
-    <Container className="py-4">
+    <AdminLayout title="Produtos">
       <Row className="align-items-center mb-3">
         <Col>
-          <h1>Produtos</h1>
+          <h2 className="admin-section-title">Produtos</h2>
         </Col>
         <Col className="text-end">
           <Button onClick={createProductHandler} variant="primary">
@@ -57,7 +58,7 @@ const ProductListScreen = () => {
       ) : products.length === 0 ? (
         <Alert variant="info">Nenhum produto cadastrado.</Alert>
       ) : (
-        <Table striped bordered hover responsive className="mt-3">
+        <Table striped bordered hover responsive className="mt-3 admin-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -101,7 +102,7 @@ const ProductListScreen = () => {
           </tbody>
         </Table>
       )}
-    </Container>
+    </AdminLayout>
   )
 }
 

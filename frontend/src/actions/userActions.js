@@ -3,8 +3,10 @@ import {
   USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGIN_FAIL, USER_LOGOUT,
   USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_REGISTER_FAIL,
   USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_DETAILS_FAIL,
-  USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_PROFILE_FAIL
+  USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_RESET
 } from '../constants/userConstants'
+import { CART_CLEAR_ITEMS } from '../constants/cartConstants'
 
 // LOGIN
 export const login = (email, password) => async (dispatch) => {
@@ -21,8 +23,11 @@ export const login = (email, password) => async (dispatch) => {
 // LOGOUT
 export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo')
+  localStorage.removeItem('cartItems')
+  localStorage.removeItem('shippingAddress')
+  localStorage.removeItem('paymentMethod')
   dispatch({ type: USER_LOGOUT })
-  document.location.href = '/login'
+  dispatch({ type: CART_CLEAR_ITEMS })
 }
 
 // REGISTER
@@ -45,6 +50,18 @@ export const getUserDetails = () => async (dispatch, getState) => {
     const { userLogin: { userInfo } } = getState()
     const config = { headers: { Authorization: `Bearer ${userInfo.token}` } }
     const { data } = await api.get('/api/users/profile', config)
+    dispatch({ type: USER_DETAILS_SUCCESS, payload: data })
+  } catch (error) {
+    dispatch({ type: USER_DETAILS_FAIL, payload: error.response?.data?.message || error.message })
+  }
+}
+
+export const getUserDetailsById = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_DETAILS_REQUEST })
+    const { userLogin: { userInfo } } = getState()
+    const config = { headers: { Authorization: `Bearer ${userInfo.token}` } }
+    const { data } = await api.get(`/api/users/${id}`, config)
     dispatch({ type: USER_DETAILS_SUCCESS, payload: data })
   } catch (error) {
     dispatch({ type: USER_DETAILS_FAIL, payload: error.response?.data?.message || error.message })
@@ -77,6 +94,18 @@ export const listUsers = () => async (dispatch, getState) => {
     dispatch({ type: 'USER_LIST_FAIL', payload: error.response?.data?.message || error.message })
   }
 }
+export const updateUser = (user) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_UPDATE_REQUEST })
+    const { userLogin: { userInfo } } = getState()
+    const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userInfo.token}` } }
+    const { data } = await api.put(`/api/users/${user._id}`, user, config)
+    dispatch({ type: USER_UPDATE_SUCCESS, payload: data })
+  } catch (error) {
+    dispatch({ type: USER_UPDATE_FAIL, payload: error.response?.data?.message || error.message })
+  }
+}
+
 // DELETAR USUÁRIO (admin)
 export const deleteUser = (id) => async (dispatch, getState) => {
   try {

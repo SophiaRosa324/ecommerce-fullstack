@@ -1,5 +1,5 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux'   // ← adicione
-import { thunk } from 'redux-thunk'                                     // ← adicione
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { thunk } from 'redux-thunk'
 import {
   productListReducer,
   productDetailsReducer,
@@ -13,6 +13,7 @@ import {
   userRegisterReducer,
   userDetailsReducer,
   userUpdateProfileReducer,
+  userUpdateReducer,
   userListReducer,
   userDeleteReducer
 } from './reducers/userReducers'
@@ -35,6 +36,7 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
+  userUpdate: userUpdateReducer,
   userList: userListReducer,
   userDelete: userDeleteReducer,
   orderCreate: orderCreateReducer,

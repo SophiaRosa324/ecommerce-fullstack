@@ -1,4 +1,5 @@
 import api from '../api'
+import { CART_CLEAR_ITEMS } from '../constants/cartConstants'
 
 export const createOrder = (order) => async (dispatch, getState) => {
   try {
@@ -6,7 +7,14 @@ export const createOrder = (order) => async (dispatch, getState) => {
     const { userLogin: { userInfo } } = getState()
     const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userInfo.token}` } }
     const { data } = await api.post('/api/orders', order, config)
+    
     dispatch({ type: 'ORDER_CREATE_SUCCESS', payload: data })
+    
+    // 🧹 LIMPA O CARRINHO APÓS PEDIDO COM SUCESSO
+    dispatch({ type: CART_CLEAR_ITEMS })
+    localStorage.removeItem('cartItems')
+    localStorage.removeItem('shippingAddress')
+    localStorage.removeItem('paymentMethod')
   } catch (error) {
     dispatch({ type: 'ORDER_CREATE_FAIL', payload: error.response?.data?.message || error.message })
   }

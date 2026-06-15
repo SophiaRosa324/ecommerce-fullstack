@@ -64,3 +64,55 @@ export const getUsers = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
+
+  // GET usuário por ID (admin)
+  export const getUserById = async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id).select('-password')
+      if (user) {
+        res.json(user)
+      } else {
+        res.status(404).json({ message: 'Usuário não encontrado' })
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message })
+    }
+  }
+
+  // UPDATE usuário (admin)
+  export const updateUser = async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id)
+      if (user) {
+        user.name = req.body.name || user.name
+        user.email = req.body.email || user.email
+        user.isAdmin = req.body.isAdmin === undefined ? user.isAdmin : req.body.isAdmin
+        const updatedUser = await user.save()
+        res.json({
+          _id: updatedUser._id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          isAdmin: updatedUser.isAdmin
+        })
+      } else {
+        res.status(404).json({ message: 'Usuário não encontrado' })
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message })
+    }
+  }
+
+  // DELETE usuário (admin)
+  export const deleteUser = async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id)
+      if (user) {
+        await user.deleteOne()
+        res.json({ message: 'Usuário removido' })
+      } else {
+        res.status(404).json({ message: 'Usuário não encontrado' })
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message })
+    }
+  }

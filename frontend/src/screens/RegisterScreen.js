@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { register } from '../actions/userActions'
 import { Link, useNavigate } from 'react-router-dom'
-import { Container,Card, Row, Col, Form, Button, Alert } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
+import '../screens/Login.css'
 
 const RegisterScreen = () => {
   const [name, setName] = useState('')
@@ -28,38 +29,76 @@ const RegisterScreen = () => {
   }
 
   return (
-    <Container className="py-5">
-      <Row className="justify-content-md-center">
-        <Col xs={12} md={6}>
-          <Card className="p-4 shadow-sm">
-          <h2>Cadastro</h2>
-          {message && <Alert variant="danger">{message}</Alert>}
-          {error && <Alert variant="danger">{error}</Alert>}
-          {loading && <p>Carregando...</p>}
-          <Form onSubmit={submitHandler}>
-            <Form.Group className="mb-3" controlId="name">
-              <Form.Label>Nome</Form.Label>
-              <Form.Control type="text" value={name} onChange={e => setName(e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" value={email} onChange={e => setEmail(e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="password">
-              <Form.Label>Senha</Form.Label>
-              <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="confirmPassword">
-              <Form.Label>Confirmar Senha</Form.Label>
-              <Form.Control type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
-            </Form.Group>
-            <Button type="submit" variant="primary">Cadastrar</Button>
-          </Form>
-          </Card>
-          <p className="mt-3">Já tem conta? <Link to="/login">Login</Link></p>
-        </Col>
-      </Row>
-    </Container>
+    <div className="login-page-container">
+      <div className="login-page">
+        <div className="login-hero">
+          <div className="hero-badge">CRIE SUA CONTA</div>
+          <h1 className="hero-title">Junte-se a nós</h1>
+          <p className="hero-sub">Crie sua conta para acompanhar pedidos, salvar favoritos e receber ofertas exclusivas.</p>
+        </div>
+
+        <div className="login-form-side">
+          <div className="login-box">
+            <div className="login-header">
+              <h2>Cadastro</h2>
+              <p>Já tem conta? <Link to="/login">Faça login</Link></p>
+            </div>
+
+            {message && <div className="login-error">{message}</div>}
+            {error && <div className="login-error">{error}</div>}
+            {loading && <p>Carregando...</p>}
+
+            <Form onSubmit={submitHandler}>
+              <div className="form-group">
+                <Form.Label>Nome</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Seu nome completo"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Digite seu email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <Form.Label>Senha</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Escolha uma senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+
+              <div className="form-group">
+                <Form.Label>Confirmar Senha</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Repita a senha"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+
+              <button type="submit" className="btn-login">Cadastrar</button>
+            </Form>
+
+            <div className="login-footer">
+              <p>Ao se cadastrar, você concorda com nossos <Link to="#">termos</Link> e <Link to="#">políticas</Link>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

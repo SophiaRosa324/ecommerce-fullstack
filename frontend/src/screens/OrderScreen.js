@@ -1,164 +1,231 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Container, Row, Col, ListGroup, Image, Alert } from 'react-bootstrap'
-import { getOrderDetails, payOrder} from '../actions/orderActions'
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
+import { Container, Row, Col, ListGroup, Image, Alert, Button } from 'react-bootstrap'
+import { getOrderDetails, payOrder } from '../actions/orderActions'
 
 const OrderScreen = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
-  const [sdkReady, setSdkReady] = useState(false)
 
-  const orderDetails = useSelector(state => state.orderDetails)
+  const orderDetails = useSelector((state) => state.orderDetails)
   const { order, loading, error } = orderDetails
 
-  const orderPay = useSelector(state => state.orderPay)
+  const orderPay = useSelector((state) => state.orderPay)
   const { loading: loadingPay, success: successPay } = orderPay
 
-  // Carregar pedido
   useEffect(() => {
     if (!order || order._id !== id || successPay) {
       dispatch(getOrderDetails(id))
     }
   }, [dispatch, id, order, successPay])
 
-  // Carregar script PayPal
-  useEffect(() => {
-    const addPayPalScript = () => {
-      const script = document.createElement('script')
-      script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.REACT_APP_PAYPAL_CLIENT_ID}`
-      script.async = true
-      script.onload = () => setSdkReady(true)
-      document.body.appendChild(script)
-    }
-    if (!window.paypal) addPayPalScript()
-    else setSdkReady(true)
-  }, [])
+  const simulatePayment = () => {
+    dispatch(
+      payOrder(order._id, {
+        id: Date.now(),
+        status: 'COMPLETED',
+        update_time: new Date().toISOString(),
+        email_address: 'cliente@exemplo.com',
+      })
+    )
+  }
 
-  // 👇 TRATAMENTO DE CARREGAMENTO E ERRO
   if (loading) {
-    return <Container className="py-4"><div className="loader">Carregando pedido...</div></Container>
+    return (
+      <Container className="py-4">
+        <Alert variant="info">Carregando pedido...</Alert>
+      </Container>
+    )
   }
 
   if (error) {
-    return <Container className="py-4"><Alert variant="danger">{error}</Alert></Container>
+    return (
+      <Container className="py-4">
+        <Alert variant="danger">{error}</Alert>
+      </Container>
+    )
   }
 
   if (!order) {
-    return <Container className="py-4"><Alert variant="warning">Pedido não encontrado. Verifique o ID.</Alert></Container>
+    return (
+      <Container className="py-4">
+        <Alert variant="warning">
+          Pedido não encontrado.
+        </Alert>
+      </Container>
+    )
   }
 
-  // 👇 SÓ A PARTIR DAQUI order EXISTE COM CERTEZA
-  const { shippingAddress = {}, paymentMethod = '', orderItems = [], isPaid = false, isDelivered = false, paidAt = null, deliveredAt = null, itemsPrice = 0, shippingPrice = 0, taxPrice = 0, totalPrice = 0 } = order
+  const {
+    shippingAddress = {},
+    paymentMethod = '',
+    orderItems = [],
+    isPaid = false,
+    isDelivered = false,
+    paidAt = null,
+    deliveredAt = null,
+    itemsPrice = 0,
+    shippingPrice = 0,
+    taxPrice = 0,
+    totalPrice = 0,
+  } = order
 
   return (
+    <div className="order-screen">
     <Container className="py-4">
       <h1 className="mb-4">Pedido #{order._id}</h1>
+
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
-            <ListGroup.Item className="border-0">
-              <h2>Entrega</h2>
+
+            <ListGroup.Item>
+              <h3>Entrega</h3>
+
               <p>
-                <strong>Endereço:</strong> {shippingAddress.address || 'Não informado'}, {shippingAddress.city || ''}{' '}
-                {shippingAddress.postalCode || ''}, {shippingAddress.country || ''}
+                <strong>Endereço:</strong>{' '}
+                {shippingAddress.address}, {shippingAddress.city},{' '}
+                {shippingAddress.postalCode},{' '}
+                {shippingAddress.country}
               </p>
+
               {isDelivered ? (
-                <Alert variant="success">Entregue em {deliveredAt?.substring(0, 10)}</Alert>
+                <Alert variant="success">
+                  Entregue em {deliveredAt?.substring(0, 10)}
+                </Alert>
               ) : (
-                <Alert variant="warning">Não entregue</Alert>
+                <Alert variant="warning">
+                  Pedido ainda não entregue
+                </Alert>
               )}
             </ListGroup.Item>
 
-            <ListGroup.Item className="border-0">
-              <h2>Pagamento</h2>
-              <p><strong>Método:</strong> {paymentMethod}</p>
+            <ListGroup.Item>
+              <h3>Pagamento</h3>
+
+              <p>
+                <strong>Método:</strong> {paymentMethod}
+              </p>
+
               {isPaid ? (
-                <Alert variant="success">Pago em {paidAt?.substring(0, 10)}</Alert>
+                <Alert variant="success">
+                  Pago em {paidAt?.substring(0, 10)}
+                </Alert>
               ) : (
-                <Alert variant="warning">Não pago</Alert>
+                <Alert variant="warning">
+                  Aguardando pagamento
+                </Alert>
               )}
             </ListGroup.Item>
 
-            <ListGroup.Item className="border-0">
-              <h2>Itens</h2>
+            <ListGroup.Item>
+              <h3>Itens do Pedido</h3>
+
               {orderItems.length === 0 ? (
-                <Alert variant="info">Nenhum item neste pedido</Alert>
+                <Alert variant="info">
+                  Nenhum item encontrado
+                </Alert>
               ) : (
                 <ListGroup variant="flush">
-                  {orderItems.map((item, idx) => (
-                    <ListGroup.Item key={idx} className="d-flex align-items-center border-0 px-0">
-                      <Image src={item.image} alt={item.name} fluid rounded style={{ width: '60px', height: '60px', objectFit: 'cover' }} />
-                      <div className="ms-3 flex-grow-1">
-                        <Link to={`/product/${item.product}`} className="text-decoration-none">
-                          {item.name}
-                        </Link>
-                      </div>
-                      <div className="fw-bold">
-                        {item.qty} x R$ {item.price?.toFixed(2)} = R$ {(item.qty * item.price).toFixed(2)}
-                      </div>
+                  {orderItems.map((item, index) => (
+                    <ListGroup.Item key={index}>
+                      <Row className="align-items-center">
+                        <Col md={2}>
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fluid
+                            rounded
+                          />
+                        </Col>
+
+                        <Col>
+                          <Link to={`/product/${item.product}`}>
+                            {item.name}
+                          </Link>
+                        </Col>
+
+                        <Col md={4}>
+                          {item.qty} x R$ {item.price} = R${' '}
+                          {(item.qty * item.price).toFixed(2)}
+                        </Col>
+                      </Row>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
               )}
             </ListGroup.Item>
+
           </ListGroup>
         </Col>
 
         <Col md={4}>
-          <ListGroup variant="flush">
-            <ListGroup.Item className="border-0"><h2>Resumo</h2></ListGroup.Item>
-            <ListGroup.Item className="d-flex justify-content-between border-0">
-              <span>Itens:</span>
-              <span>R$ {itemsPrice?.toFixed(2)}</span>
+          <ListGroup>
+
+            <ListGroup.Item>
+              <h3>Resumo do Pedido</h3>
             </ListGroup.Item>
-            <ListGroup.Item className="d-flex justify-content-between border-0">
-              <span>Frete:</span>
-              <span>R$ {shippingPrice?.toFixed(2)}</span>
+
+            <ListGroup.Item>
+              <Row>
+                <Col>Itens</Col>
+                <Col>R$ {Number(itemsPrice).toFixed(2)}</Col>
+              </Row>
             </ListGroup.Item>
-            <ListGroup.Item className="d-flex justify-content-between border-0">
-              <span>Impostos:</span>
-              <span>R$ {taxPrice?.toFixed(2)}</span>
+
+            <ListGroup.Item>
+              <Row>
+                <Col>Frete</Col>
+                <Col>R$ {Number(shippingPrice).toFixed(2)}</Col>
+              </Row>
             </ListGroup.Item>
-            <ListGroup.Item className="d-flex justify-content-between fw-bold border-0">
-              <span>Total:</span>
-              <span>R$ {totalPrice?.toFixed(2)}</span>
+
+            <ListGroup.Item>
+              <Row>
+                <Col>Impostos</Col>
+                <Col>R$ {Number(taxPrice).toFixed(2)}</Col>
+              </Row>
+            </ListGroup.Item>
+
+            <ListGroup.Item>
+              <Row>
+                <Col>
+                  <strong>Total</strong>
+                </Col>
+                <Col>
+                  <strong>
+                    R$ {Number(totalPrice).toFixed(2)}
+                  </strong>
+                </Col>
+              </Row>
             </ListGroup.Item>
 
             {!isPaid && (
-              <ListGroup.Item className="border-0">
-                {loadingPay && <Alert variant="info">Processando pagamento...</Alert>}
-                {!sdkReady ? (
-                  <Alert variant="secondary">Carregando PayPal...</Alert>
-                ) : (
-                  <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID }}>
-                    <PayPalButtons
-                      createOrder={(data, actions) => {
-                        return actions.order.create({
-                          purchase_units: [{ amount: { value: totalPrice } }]
-                        })
-                      }}
-                      onApprove={(data, actions) => {
-                        return actions.order.capture().then(details => {
-                          const paymentResult = {
-                            id: details.id,
-                            status: details.status,
-                            update_time: details.update_time,
-                            email_address: details.payer.email_address
-                          }
-                          dispatch(payOrder(order._id, paymentResult))
-                        })
-                      }}
-                    />
-                  </PayPalScriptProvider>
+              <ListGroup.Item>
+
+                {loadingPay && (
+                  <Alert variant="info">
+                    Processando pagamento...
+                  </Alert>
                 )}
+
+                <Button
+                  variant="success"
+                  className="w-100"
+                  onClick={simulatePayment}
+                >
+                  Simular Pagamento
+                </Button>
+
               </ListGroup.Item>
             )}
+
           </ListGroup>
         </Col>
       </Row>
     </Container>
+    </div>
   )
 }
 

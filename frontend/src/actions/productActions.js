@@ -1,10 +1,15 @@
 import api from '../api'
 
-const API_URL = 'https://ecommerce-fullstack-5zfz.onrender.com'
-export const listProducts = (keyword = '') => async (dispatch) => {
+export const listProducts = (keyword = '', category = '') => async (dispatch) => {
   try {
     dispatch({ type: 'PRODUCT_LIST_REQUEST' })
-    const { data } = await api.get(`${API_URL}/api/products?keyword=${keyword}`)
+    
+    let url = `/api/products?keyword=${encodeURIComponent(keyword)}`
+    if (category) {
+      url += `&category=${encodeURIComponent(category)}`
+    }
+    
+    const { data } = await api.get(url)
     dispatch({ type: 'PRODUCT_LIST_SUCCESS', payload: data })
   } catch (error) {
     dispatch({ type: 'PRODUCT_LIST_FAIL', payload: error.response?.data?.message || error.message })
@@ -16,7 +21,7 @@ export const listProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: 'PRODUCT_DETAILS_REQUEST' })
 
-    const { data } = await api.get(`${API_URL}/api/products/${id}`)
+    const { data } = await api.get(`/api/products/${id}`)
 
     dispatch({
       type: 'PRODUCT_DETAILS_SUCCESS',

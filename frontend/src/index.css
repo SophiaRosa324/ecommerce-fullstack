@@ -476,6 +476,7 @@ main {
   }
 }
 
+/* Categories */
 .categories-list .category-pill {
   padding: 0.45rem 0.9rem;
   background: linear-gradient(90deg,#ffffff,#f8fafc);
@@ -483,6 +484,20 @@ main {
   color: #0f172a;
   border: 1px solid #e6eef8;
   text-decoration: none;
+}
+
+.categories-list .category-pill:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.categories-list .category-pill.active {
+  background: #cbd5e1;
+  border-color: #94a3b8;
+  color: #0f172a;
+  font-weight: 600;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 @media (max-width: 980px) {
@@ -521,16 +536,16 @@ main {
 
 /* ===== CART SCREEN ===== */
 .cart-screen {
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
-  min-height: 100vh;
+  padding: 2rem 2rem;
+  min-height: 70vh;
   background: #f8fafc;
 }
 
 .cart-container {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 360px;
   gap: 2rem;
 }
 
@@ -544,7 +559,7 @@ main {
 
 .cart-items-section h2 {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 1.5rem;
   color: #0f172a;
   border-bottom: 2px solid #f1f5f9;
@@ -824,29 +839,35 @@ main {
   }
 }
 
-/* ===== ORDER SCREEN - ESTILOS MODERNOS ===== */
+/* ===== ORDER SCREEN - PADRONIZADO COM O RESTANTE DO SITE ===== */
 
 .order-screen {
-  background: linear-gradient(135deg, #f5f7fa 0%, #f8fafc 100%);
+  background: #dbe2f4e2;  /* mesma cor de fundo do login/home */
   min-height: 100vh;
-  padding: 1rem 0 3rem;
+  padding: 2rem 0;
 }
 
-/* Loader personalizado */
+/* Container principal */
+.order-screen .container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Loader personalizado (igual ao do product screen) */
 .order-screen .loader {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 300px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #2c3e66;
   gap: 0.8rem;
 }
 
 .order-screen .loader::before {
   content: '';
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border: 3px solid #e2e8f0;
   border-top-color: #2c3e66;
   border-radius: 50%;
@@ -857,9 +878,9 @@ main {
   to { transform: rotate(360deg); }
 }
 
-/* Títulos das seções */
+/* Títulos principais */
 .order-screen h1 {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #0f172a;
   margin-bottom: 1.5rem;
@@ -867,42 +888,65 @@ main {
 }
 
 .order-screen h2 {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #1e293b;
+  color: #0f172a;
   margin-bottom: 1rem;
   border-left: 4px solid #2c3e66;
   padding-left: 0.75rem;
 }
 
-/* ListGroup personalizado */
+/* ListGroup - estilo cartão consistente */
 .order-screen .list-group-item {
   background: white;
-  border-radius: 1rem !important;
+  border-radius: 16px !important;  /* mesmo do login/product */
   margin-bottom: 1rem;
   padding: 1.2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .order-screen .list-group-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Cards de endereço/pagamento */
+/* Alerts - padronizados */
 .order-screen .alert {
-  border-radius: 0.75rem;
-  margin-top: 0.5rem;
+  border-radius: 12px;
+  margin-top: 0.75rem;
   font-size: 0.9rem;
+  border: none;
+}
+
+.order-screen .alert-success {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.order-screen .alert-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.order-screen .alert-info {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.order-screen .alert-danger {
+  background-color: #fee2e2;
+  color: #991b1b;
 }
 
 /* Itens do pedido */
 .order-screen .d-flex.align-items-center {
   background: #f8fafc;
-  border-radius: 1rem;
+  border-radius: 12px;
   padding: 1rem;
   transition: background 0.2s;
+  margin-bottom: 0.75rem;
 }
 
 .order-screen .d-flex.align-items-center:hover {
@@ -912,14 +956,15 @@ main {
 .order-screen .d-flex.align-items-center img {
   width: 70px !important;
   height: 70px !important;
-  border-radius: 12px;
+  border-radius: 10px;
   object-fit: cover;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .order-screen .d-flex.align-items-center .ms-3 a {
   font-weight: 600;
   color: #0f172a;
+  text-decoration: none;
   transition: color 0.2s;
 }
 
@@ -928,25 +973,36 @@ main {
   text-decoration: underline;
 }
 
+/* Quantidade e preço dos itens */
+.order-screen .d-flex.align-items-center .fw-bold {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 0.95rem;
+}
+
 /* Resumo do pedido (coluna da direita) */
 .order-screen .col-md-4 .list-group-item {
-  background: #f8fafc;
+  background: white;
+  border-radius: 16px !important;
+  margin-bottom: 0.75rem;
+  padding: 0.8rem 1.2rem;
   border: none;
-  padding: 0.8rem 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .order-screen .col-md-4 .list-group-item:first-child {
   background: white;
-  border-radius: 1rem 1rem 0 0;
 }
 
 .order-screen .col-md-4 .list-group-item h2 {
   margin-bottom: 0;
+  font-size: 1.2rem;
 }
 
 /* Linhas do resumo */
 .order-screen .d-flex.justify-content-between {
-  font-size: 1rem;
+  font-size: 0.95rem;
+  padding: 0.5rem 0;
 }
 
 .order-screen .d-flex.justify-content-between span:first-child {
@@ -963,21 +1019,119 @@ main {
   color: #2c3e66;
 }
 
-/* Botão do PayPal */
+/* Botão do PayPal - padronizado com os botões do site */
 .order-screen .paypal-buttons {
   margin-top: 1rem;
 }
 
-.order-screen .alert-info {
-  background-color: #e0f2fe;
-  border-color: #bae6fd;
-  color: #0369a1;
+.order-screen .paypal-buttons > div {
+  border-radius: 12px;
+  overflow: hidden;
 }
+
+.order-summary-block {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+}
+
+.order-summary-block h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+/* Linhas do resumo */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.summary-row:last-of-type {
+  border-bottom: none;
+}
+
+.summary-label {
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.summary-value {
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Linha do TOTAL (destaque) */
+.summary-row.total {
+  margin-top: 0.75rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e2e8f0;
+  border-bottom: none;
+}
+
+.summary-row.total .summary-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.summary-row.total .summary-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #2c3e66;
+  background: linear-gradient(135deg, #2c3e66, #1e293b);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Botão de pagamento */
+.btn-payment {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.9rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  border: none;
+  border-radius: 40px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-payment:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.3);
+  background: linear-gradient(135deg, #1e293b 0%, #2c3e66 100%);
+}
+
+.btn-payment:active {
+  transform: translateY(0);
+}
+
 
 /* Responsividade */
 @media (max-width: 768px) {
   .order-screen {
-    padding: 0.5rem;
+    padding: 1rem 0;
+  }
+  
+  .order-screen h1 {
+    font-size: 1.5rem;
+    padding: 0 1rem;
   }
   
   .order-screen .d-flex.align-items-center {
@@ -995,37 +1149,19 @@ main {
     align-items: flex-start;
     gap: 0.25rem;
   }
+  
+  .order-screen .col-md-4 .list-group-item {
+    margin: 0 1rem 0.75rem 1rem;
+  }
 }
 
-.order-screen .loader::before {
-  content: '';
-  width: 30px;
-  height: 30px;
-  border: 3px solid #e2e8f0;
-  border-top-color: #2c3e66;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+@media (max-width: 480px) {
+  .order-screen .d-flex.align-items-center img {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .order-screen .list-group-item {
+    padding: 1rem;
+  }
 }
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Títulos das seções */
-.order-screen h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.5px;
-}
-
-.order-screen h2 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 1rem;
-  border-left: 4px solid #2c3e66;
-  padding-left: 0.75rem;
-}
-

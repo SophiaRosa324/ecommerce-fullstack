@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Container, Row, Col, ListGroup, Image, Alert, Button } from 'react-bootstrap'
+import { Container, Row, Col, ListGroup, Image, Alert } from 'react-bootstrap'
 import { getOrderDetails, payOrder } from '../actions/orderActions'
 
 const OrderScreen = () => {
@@ -33,27 +33,31 @@ const OrderScreen = () => {
 
   if (loading) {
     return (
-      <Container className="py-4">
-        <Alert variant="info">Carregando pedido...</Alert>
-      </Container>
+      <div className="order-screen">
+        <Container className="py-4">
+          <div className="loader">Carregando pedido...</div>
+        </Container>
+      </div>
     )
   }
 
   if (error) {
     return (
-      <Container className="py-4">
-        <Alert variant="danger">{error}</Alert>
-      </Container>
+      <div className="order-screen">
+        <Container className="py-4">
+          <Alert variant="danger">{error}</Alert>
+        </Container>
+      </div>
     )
   }
 
   if (!order) {
     return (
-      <Container className="py-4">
-        <Alert variant="warning">
-          Pedido não encontrado.
-        </Alert>
-      </Container>
+      <div className="order-screen">
+        <Container className="py-4">
+          <Alert variant="warning">Pedido não encontrado.</Alert>
+        </Container>
+      </div>
     )
   }
 
@@ -73,158 +77,109 @@ const OrderScreen = () => {
 
   return (
     <div className="order-screen">
-    <Container className="py-4">
-      <h1 className="mb-4">Pedido #{order._id}</h1>
+      <Container className="py-4">
+        <h1 className="mb-4">Pedido #{order._id}</h1>
 
-      <Row>
-        <Col md={8}>
-          <ListGroup variant="flush">
-
-            <ListGroup.Item>
-              <h3>Entrega</h3>
-
-              <p>
-                <strong>Endereço:</strong>{' '}
-                {shippingAddress.address}, {shippingAddress.city},{' '}
-                {shippingAddress.postalCode},{' '}
-                {shippingAddress.country}
-              </p>
-
-              {isDelivered ? (
-                <Alert variant="success">
-                  Entregue em {deliveredAt?.substring(0, 10)}
-                </Alert>
-              ) : (
-                <Alert variant="warning">
-                  Pedido ainda não entregue
-                </Alert>
-              )}
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              <h3>Pagamento</h3>
-
-              <p>
-                <strong>Método:</strong> {paymentMethod}
-              </p>
-
-              {isPaid ? (
-                <Alert variant="success">
-                  Pago em {paidAt?.substring(0, 10)}
-                </Alert>
-              ) : (
-                <Alert variant="warning">
-                  Aguardando pagamento
-                </Alert>
-              )}
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              <h3>Itens do Pedido</h3>
-
-              {orderItems.length === 0 ? (
-                <Alert variant="info">
-                  Nenhum item encontrado
-                </Alert>
-              ) : (
-                <ListGroup variant="flush">
-                  {orderItems.map((item, index) => (
-                    <ListGroup.Item key={index}>
-                      <Row className="align-items-center">
-                        <Col md={2}>
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fluid
-                            rounded
-                          />
-                        </Col>
-
-                        <Col>
-                          <Link to={`/product/${item.product}`}>
-                            {item.name}
-                          </Link>
-                        </Col>
-
-                        <Col md={4}>
-                          {item.qty} x R$ {item.price} = R${' '}
-                          {(item.qty * item.price).toFixed(2)}
-                        </Col>
-                      </Row>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              )}
-            </ListGroup.Item>
-
-          </ListGroup>
-        </Col>
-
-        <Col md={4}>
-          <ListGroup>
-
-            <ListGroup.Item>
-              <h3>Resumo do Pedido</h3>
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              <Row>
-                <Col>Itens</Col>
-                <Col>R$ {Number(itemsPrice).toFixed(2)}</Col>
-              </Row>
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              <Row>
-                <Col>Frete</Col>
-                <Col>R$ {Number(shippingPrice).toFixed(2)}</Col>
-              </Row>
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              <Row>
-                <Col>Impostos</Col>
-                <Col>R$ {Number(taxPrice).toFixed(2)}</Col>
-              </Row>
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              <Row>
-                <Col>
-                  <strong>Total</strong>
-                </Col>
-                <Col>
-                  <strong>
-                    R$ {Number(totalPrice).toFixed(2)}
-                  </strong>
-                </Col>
-              </Row>
-            </ListGroup.Item>
-
-            {!isPaid && (
+        <Row>
+          <Col md={8}>
+            <ListGroup variant="flush">
               <ListGroup.Item>
-
-                {loadingPay && (
-                  <Alert variant="info">
-                    Processando pagamento...
+                <h2>Entrega</h2>
+                <p>
+                  <strong>Endereço:</strong>{' '}
+                  {shippingAddress.address}, {shippingAddress.city},{' '}
+                  {shippingAddress.postalCode}, {shippingAddress.country}
+                </p>
+                {isDelivered ? (
+                  <Alert variant="success">
+                    Entregue em {deliveredAt?.substring(0, 10)}
                   </Alert>
+                ) : (
+                  <Alert variant="warning">Pedido ainda não entregue</Alert>
                 )}
-
-                <Button
-                  variant="success"
-                  className="w-100"
-                  onClick={simulatePayment}
-                >
-                  Simular Pagamento
-                </Button>
-
               </ListGroup.Item>
-            )}
 
-          </ListGroup>
-        </Col>
-      </Row>
-    </Container>
+              <ListGroup.Item>
+                <h2>Pagamento</h2>
+                <p>
+                  <strong>Método:</strong> {paymentMethod}
+                </p>
+                {isPaid ? (
+                  <Alert variant="success">
+                    Pago em {paidAt?.substring(0, 10)}
+                  </Alert>
+                ) : (
+                  <Alert variant="warning">Aguardando pagamento</Alert>
+                )}
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                <h2>Itens do Pedido</h2>
+                {orderItems.length === 0 ? (
+                  <Alert variant="info">Nenhum item encontrado</Alert>
+                ) : (
+                  <ListGroup variant="flush">
+                    {orderItems.map((item, index) => (
+                      <ListGroup.Item key={index}>
+                        <Row className="align-items-center">
+                          <Col md={2}>
+                            <Image src={item.image} alt={item.name} fluid rounded />
+                          </Col>
+                          <Col>
+                            <Link to={`/product/${item.product}`}>{item.name}</Link>
+                          </Col>
+                          <Col md={4}>
+                            {item.qty} x R$ {item.price} = R${' '}
+                            {(item.qty * item.price).toFixed(2)}
+                          </Col>
+                        </Row>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                )}
+              </ListGroup.Item>
+            </ListGroup>
+          </Col>
+
+          <Col md={4}>
+            {/* NOVO BLOCO DE RESUMO ESTILIZADO */}
+            <div className="order-summary-block">
+              <h3>Resumo do Pedido</h3>
+
+              <div className="summary-row">
+                <span className="summary-label">Itens</span>
+                <span className="summary-value">R$ {Number(itemsPrice).toFixed(2)}</span>
+              </div>
+
+              <div className="summary-row">
+                <span className="summary-label">Frete</span>
+                <span className="summary-value">R$ {Number(shippingPrice).toFixed(2)}</span>
+              </div>
+
+              <div className="summary-row">
+                <span className="summary-label">Impostos</span>
+                <span className="summary-value">R$ {Number(taxPrice).toFixed(2)}</span>
+              </div>
+
+              <div className="summary-row total">
+                <span className="summary-label">Total</span>
+                <span className="summary-value">R$ {Number(totalPrice).toFixed(2)}</span>
+              </div>
+
+              {!isPaid && (
+                <>
+                  {loadingPay && (
+                    <div className="alert alert-info mt-3">Processando pagamento...</div>
+                  )}
+                  <button className="btn-payment" onClick={simulatePayment}>
+                    Simular Pagamento
+                  </button>
+                </>
+              )}
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </div>
   )
 }

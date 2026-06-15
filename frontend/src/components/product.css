@@ -187,10 +187,10 @@
 
 /* ===== PRODUCT SCREEN (DETALHE) ===== */
 .product-screen {
-  max-width: 1400px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
-  min-height: 100vh;
+  padding: 2rem 2rem;
+  min-height: 70vh;
   background: #f8fafc;
 }
 
